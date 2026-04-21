@@ -54,6 +54,12 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="Gestao_Editar_Cliente">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+Alt+C"/>
+                </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/imagem/CLEDI.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Editar Cliente"/>
               </Properties>
               <Events>

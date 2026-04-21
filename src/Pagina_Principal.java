@@ -150,6 +150,8 @@ public class Pagina_Principal extends javax.swing.JFrame {
         Gestao_Listar_Cliente.addActionListener(this::Gestao_Listar_ClienteActionPerformed);
         menu_gestao.add(Gestao_Listar_Cliente);
 
+        Gestao_Editar_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Editar_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/CLEDI.png"))); // NOI18N
         Gestao_Editar_Cliente.setText("Editar Cliente");
         Gestao_Editar_Cliente.addActionListener(this::Gestao_Editar_ClienteActionPerformed);
         menu_gestao.add(Gestao_Editar_Cliente);
@@ -238,11 +240,13 @@ public class Pagina_Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_EditarSensorActionPerformed
 
     private void Gestao_Listar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Listar_ClienteActionPerformed
-        // TODO add your handling code here:
+        dispose();
+        new CL_listar().setVisible(true);
     }//GEN-LAST:event_Gestao_Listar_ClienteActionPerformed
 
     private void Gestao_Editar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Editar_ClienteActionPerformed
-        // TODO add your handling code here:
+        dispose();
+        new CL_updt().setVisible(true);
     }//GEN-LAST:event_Gestao_Editar_ClienteActionPerformed
 
     /**

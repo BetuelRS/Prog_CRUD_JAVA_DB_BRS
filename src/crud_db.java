@@ -8,12 +8,17 @@
  * @author Aluno1
  */
 
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
 
 public class crud_db {
     
@@ -156,7 +161,29 @@ public class crud_db {
             System.getLogger(crud_db.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    public void updateCliente(int cod_cliente, String nome_cliente, String categoria_cliente, Date data_nasc, int nif, String email, String genero, int cartao_identificacao, int numero_telefone, String redes_sociais, String morada, int zona_postal, int cod_postal, String nacionalidade, String pais, Date data_registo, String imagem, String OBS){
+
+//Método para atuallizar o cliente
+
+
+    
+    public void updateCliente(
+        int cod_cliente,
+        String nome_cliente,
+        String categoria_cliente,
+        Date data_nasc,
+        int nif, 
+        String email, 
+        String genero, 
+        int cartao_identificacao, 
+        int numero_telefone, 
+        String redes_sociais, 
+        String morada, 
+        int zona_postal, 
+        int cod_postal, 
+        String nacionalidade, 
+        String pais, 
+        Date data_registo, 
+        String imagem, String OBS){
         String sql = "update cliente set nome_cliente = ?, categoria_cliente = ?, data_nasc = ?, nif = ?, email = ?, genero = ?, cartao_identificacao = ?, numero_telefone = ?, redes_sociais = ?, morada = ?, zona_postal = ?, cod_postal = ?, nacionalidade = ?, pais = ?, data_registo = ?, imagem = ?, OBS = ? where cod_cliente = ?";
         try { 
             Connection conn = conectar.getConnect();
@@ -217,5 +244,38 @@ public class crud_db {
         dados.add(row);
     }
     return dados;
+}
+    
+    public Map<String, Object> buscarClientePorCodigo(int cod_cliente) {
+    String sql = "SELECT * FROM cliente WHERE cod_cliente = ?";
+    Map<String, Object> cliente = new HashMap<>();
+    try (Connection conn = conectar.getConnect();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, cod_cliente);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            cliente.put("cod_cliente", rs.getInt("cod_cliente"));
+            cliente.put("nome_cliente", rs.getString("nome_cliente"));
+            cliente.put("categoria_cliente", rs.getString("categoria_cliente"));
+            cliente.put("data_nasc", rs.getDate("data_nasc"));
+            cliente.put("nif", rs.getInt("nif"));
+            cliente.put("email", rs.getString("email"));
+            cliente.put("genero", rs.getString("genero"));
+            cliente.put("cartao_identificacao", rs.getInt("cartao_identificacao"));
+            cliente.put("numero_telefone", rs.getInt("numero_telefone"));
+            cliente.put("redes_sociais", rs.getString("redes_sociais"));
+            cliente.put("morada", rs.getString("morada"));
+            cliente.put("zona_postal", rs.getInt("zona_postal"));
+            cliente.put("cod_postal", rs.getInt("cod_postal"));
+            cliente.put("nacionalidade", rs.getString("nacionalidade"));
+            cliente.put("pais", rs.getString("pais"));
+            cliente.put("data_registo", rs.getDate("data_registo"));
+            cliente.put("imagem", rs.getString("imagem"));
+            cliente.put("OBS", rs.getString("OBS"));
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return cliente;
 }
 }
