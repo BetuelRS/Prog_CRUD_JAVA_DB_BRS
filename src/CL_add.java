@@ -1,3 +1,6 @@
+
+import javax.swing.JOptionPane;
+import java.sql.Date;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -18,6 +21,183 @@ public class CL_add extends javax.swing.JFrame {
         initComponents();
     }
 
+    
+    private boolean validarCampos() {
+    // Limpa mensagens de erro (opcional: usar JLabel para exibir)
+    String erro = "";
+
+    // --- Nome (obrigatório, mínimo 3 caracteres) ---
+    String nome = txtNome.getText().trim();
+    if (nome.isEmpty()) {
+        erro += "- Nome é obrigatório.\n";
+    } else if (nome.length() < 3) {
+        erro += "- Nome deve ter pelo menos 3 caracteres.\n";
+    }
+
+    // --- Categoria (opcional, mas se preenchido, sem números) ---
+    String categoria = txtCategoria.getText().trim();
+    if (!categoria.isEmpty() && !categoria.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+        erro += "- Categoria deve conter apenas letras.\n";
+    }
+
+    // --- Data de Nascimento (obrigatória, formato yyyy-MM-dd) ---
+    String dataNascStr = txtDataNasc.getText().trim();
+    if (dataNascStr.isEmpty()) {
+        erro += "- Data de nascimento é obrigatória.\n";
+    } else {
+        try {
+            java.sql.Date dataNasc = java.sql.Date.valueOf(dataNascStr);
+            // Verifica se é uma data passada (não pode ser futura)
+            if (dataNasc.after(new java.util.Date())) {
+                erro += "- Data de nascimento não pode ser futura.\n";
+            }
+        } catch (IllegalArgumentException e) {
+            erro += "- Data de nascimento inválida. Use o formato yyyy-mm-dd.\n";
+        }
+    }
+
+    // --- NIF (obrigatório, 9 dígitos) ---
+    String nifStr = txtNif.getText().trim();
+    if (nifStr.isEmpty()) {
+        erro += "- NIF é obrigatório.\n";
+    } else {
+        try {
+            int nif = Integer.parseInt(nifStr);
+            if (nifStr.length() != 9) {
+                erro += "- NIF deve ter exatamente 9 dígitos.\n";
+            }
+        } catch (NumberFormatException e) {
+            erro += "- NIF deve conter apenas números.\n";
+        }
+    }
+
+    // --- Email (obrigatório e formato válido) ---
+    String email = txtEmail.getText().trim();
+    if (email.isEmpty()) {
+        erro += "- Email é obrigatório.\n";
+    } else if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        erro += "- Email inválido.\n";
+    }
+
+    // --- Gênero (obrigatório, M/F/Outro) ---
+    String genero = txtGenero.getText().trim();
+    if (genero.isEmpty()) {
+        erro += "- Gênero é obrigatório.\n";
+    } else if (!genero.matches("(?i)^(M|F|Masculino|Feminino|Outro)$")) {
+        erro += "- Gênero inválido. Use M, F, Masculino, Feminino ou Outro.\n";
+    }
+
+    // --- Cartão de Identificação (obrigatório, numérico, 8-12 dígitos) ---
+    String cartaoStr = txtCartaoId.getText().trim();
+    if (cartaoStr.isEmpty()) {
+        erro += "- Cartão de identificação é obrigatório.\n";
+    } else {
+        try {
+            long cartao = Long.parseLong(cartaoStr);
+            if (cartaoStr.length() < 8 || cartaoStr.length() > 12) {
+                erro += "- Cartão de identificação deve ter entre 8 e 12 dígitos.\n";
+            }
+        } catch (NumberFormatException e) {
+            erro += "- Cartão de identificação deve conter apenas números.\n";
+        }
+    }
+
+    // --- Telefone (obrigatório, 9 dígitos, começa com 9) ---
+    String telefoneStr = txtTelefone.getText().trim();
+    if (telefoneStr.isEmpty()) {
+        erro += "- Telefone é obrigatório.\n";
+    } else {
+        try {
+            long telefone = Long.parseLong(telefoneStr);
+            if (telefoneStr.length() != 9 || !telefoneStr.startsWith("9")) {
+                erro += "- Telefone deve ter 9 dígitos e começar com 9.\n";
+            }
+        } catch (NumberFormatException e) {
+            erro += "- Telefone deve conter apenas números.\n";
+        }
+    }
+
+    // --- Redes Sociais (opcional, sem validação específica) ---
+    // (pode deixar como está)
+
+    // --- Morada (obrigatória, mínimo 5 caracteres) ---
+    String morada = txtMorada.getText().trim();
+    if (morada.isEmpty()) {
+        erro += "- Morada é obrigatória.\n";
+    } else if (morada.length() < 5) {
+        erro += "- Morada deve ter pelo menos 5 caracteres.\n";
+    }
+
+    // --- Zona Postal (obrigatória, numérico, 4 dígitos) ---
+    String zonaStr = txtZonaPostal.getText().trim();
+    if (zonaStr.isEmpty()) {
+        erro += "- Zona postal é obrigatória.\n";
+    } else {
+        try {
+            int zona = Integer.parseInt(zonaStr);
+            if (zonaStr.length() != 3) {
+                erro += "- Zona postal deve ter 3 dígitos.\n";
+            }
+        } catch (NumberFormatException e) {
+            erro += "- Zona postal deve conter apenas números.\n";
+        }
+    }
+
+    // --- Código Postal (obrigatório, formato 0000-000) ---
+    String codPostalStr = txtCodigoPostal.getText().trim();
+    if (codPostalStr.isEmpty()) {
+        erro += "- Código postal é obrigatório.\n";
+    } else if (!codPostalStr.matches("\\d{4}-\\d{3}")) {
+        erro += "- Código postal inválido. Use o formato 0000-000.\n";
+    }
+
+    // --- Nacionalidade (obrigatório, apenas letras) ---
+    String nacionalidade = txtNacionalidade.getText().trim();
+    if (nacionalidade.isEmpty()) {
+        erro += "- Nacionalidade é obrigatória.\n";
+    } else if (!nacionalidade.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+        erro += "- Nacionalidade deve conter apenas letras.\n";
+    }
+
+    // --- País (obrigatório, apenas letras) ---
+    String pais = txtPais.getText().trim();
+    if (pais.isEmpty()) {
+        erro += "- País é obrigatório.\n";
+    } else if (!pais.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+        erro += "- País deve conter apenas letras.\n";
+    }
+
+    // --- Data de Registo (obrigatória, formato yyyy-MM-dd, não futura) ---
+    String dataRegistoStr = txtDataRegisto.getText().trim();
+    if (dataRegistoStr.isEmpty()) {
+        erro += "- Data de registo é obrigatória.\n";
+    } else {
+        try {
+            java.sql.Date dataRegisto = java.sql.Date.valueOf(dataRegistoStr);
+            if (dataRegisto.after(new java.util.Date())) {
+                erro += "- Data de registo não pode ser futura.\n";
+            }
+        } catch (IllegalArgumentException e) {
+            erro += "- Data de registo inválida. Use o formato yyyy-mm-dd.\n";
+        }
+    }
+
+    // --- Imagem (opcional, mas se preenchido, validar extensão .jpg/.png) ---
+    String imagem = txtimagem.getText().trim();
+    if (!imagem.isEmpty() && !imagem.matches("(?i).*\\.(jpg|jpeg|png)$")) {
+        erro += "- Imagem deve ser um arquivo .jpg, .jpeg ou .png.\n";
+    }
+
+    // --- OBS (opcional, sem validação) ---
+
+    // Exibe erro se houver
+    if (!erro.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Erros de validação:\n" + erro, "Dados inválidos", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    return true;
+}
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -220,7 +400,11 @@ public class CL_add extends javax.swing.JFrame {
     }//GEN-LAST:event_VoltarActionPerformed
 
     private void EnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnviarActionPerformed
-        OP.insertCliente(
+    if (!validarCampos()) {
+    return; // não envia se houver erro
+    }
+        
+    OP.insertCliente(
     txtNome.getText(), 
     txtCategoria.getText(), 
     java.sql.Date.valueOf(txtDataNasc.getText()),   // String -> Date
@@ -232,7 +416,7 @@ public class CL_add extends javax.swing.JFrame {
     txtRedesSociais.getText(), 
     txtMorada.getText(), 
     Integer.parseInt(txtZonaPostal.getText()), 
-    Integer.parseInt(txtCodigoPostal.getText()), 
+    Integer.parseInt(txtCodigoPostal.getText().trim().split("-")[0]), 
     txtNacionalidade.getText(), 
     txtPais.getText(), 
     java.sql.Date.valueOf(txtDataRegisto.getText()), // String -> Date
