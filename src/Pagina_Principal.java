@@ -1,6 +1,8 @@
 
 import java.awt.Color;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -33,6 +35,9 @@ public class Pagina_Principal extends javax.swing.JFrame {
         initComponents();
         CarregarDados();
         loadTable_Sensores();
+        loadTable_Clientes();
+        loadTable_Zonas();
+        loadTable_Categorias();
        // if(crud.conectar);
 // Redimensiona para 20x20 pixels
     }
@@ -58,6 +63,37 @@ public class Pagina_Principal extends javax.swing.JFrame {
             System.getLogger(Pagina_Principal.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
+    
+    public void loadTable_Zonas() {
+    // Supondo que você tenha uma JTable chamada "Table_Zonas" com duas colunas: "Zona Postal" e "Quantidade"
+    DefaultTableModel model = (DefaultTableModel) Table_Zonas.getModel();
+    model.setNumRows(0); // limpa a tabela
+
+    List<Object[]> dados = OP.contarClientesPorZona();
+    for (Object[] linha : dados) {
+        model.addRow(linha);
+    }
+}
+    
+    //Tabela de contagem do genero pela função contarClientesPorGenero
+    public void loadTable_Clientes() {
+    DefaultTableModel model_tab_cliente = (DefaultTableModel) Table_CL.getModel();
+    model_tab_cliente.setNumRows(0); // limpa a tabela
+    
+    Object[] linha = OP.contarClientesPorGenero(); // retorna [masculino, feminino, outros]
+    model_tab_cliente.addRow(linha);
+}
+
+    public void loadTable_Categorias() {
+    // Supondo que você tenha uma JTable chamada "Table_Categorias" com duas colunas: "Categoria" e "Quantidade"
+    DefaultTableModel model = (DefaultTableModel) Table_Categorias.getModel();
+    model.setNumRows(0); // limpa a tabela
+
+    List<Object[]> dados = OP.contarClientesPorCategoria();
+    for (Object[] linha : dados) {
+        model.addRow(linha);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,8 +107,18 @@ public class Pagina_Principal extends javax.swing.JFrame {
         online = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         exit = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Table_sensores = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Table_CL = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Table_Zonas = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        Table_Categorias = new javax.swing.JTable();
         Barra_Menu = new javax.swing.JMenuBar();
         menu_principal = new javax.swing.JMenu();
         menu_gestao = new javax.swing.JMenu();
@@ -110,6 +156,9 @@ public class Pagina_Principal extends javax.swing.JFrame {
 
         Painel_Principal.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 820, 40));
 
+        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         Table_sensores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -123,7 +172,65 @@ public class Pagina_Principal extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(Table_sensores);
 
-        Painel_Principal.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 300, 160));
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 230, 160));
+
+        jLabel1.setText("Sensores");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
+
+        Painel_Principal.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 250, 410));
+
+        jPanel3.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Table_CL.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Masculino", "Feminino", "Outro"
+            }
+        ));
+        jScrollPane2.setViewportView(Table_CL);
+
+        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 230, 50));
+
+        jLabel2.setText("Clientes");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 30, -1, -1));
+
+        Table_Zonas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Zona Postal", "Quantidade"
+            }
+        ));
+        jScrollPane3.setViewportView(Table_Zonas);
+
+        jPanel3.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 230, 160));
+
+        Table_Categorias.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Categoria", "Quantidade"
+            }
+        ));
+        jScrollPane4.setViewportView(Table_Categorias);
+
+        jPanel3.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 230, 100));
+
+        Painel_Principal.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 10, 250, 410));
 
         getContentPane().add(Painel_Principal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 510));
 
@@ -288,10 +395,20 @@ public class Pagina_Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem ListarSensor;
     private javax.swing.JMenuItem NovoSensor;
     private javax.swing.JPanel Painel_Principal;
+    private javax.swing.JTable Table_CL;
+    private javax.swing.JTable Table_Categorias;
+    private javax.swing.JTable Table_Zonas;
     private javax.swing.JTable Table_sensores;
     private javax.swing.JButton exit;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JMenu menu_gestao;
     private javax.swing.JMenu menu_principal;
     private javax.swing.JMenu menu_sair;

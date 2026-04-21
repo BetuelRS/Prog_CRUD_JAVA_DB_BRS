@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -278,4 +279,70 @@ public class crud_db {
     }
     return cliente;
 }
+
+//função para contar quantidade de clientes por genero (Masculino, Feminino, Outro) e mostrar numa tabela
+    public Object[] contarClientesPorGenero() {
+    String sql = "SELECT " +
+                 "SUM(CASE WHEN genero IN ('M', 'Masculino') THEN 1 ELSE 0 END) AS Masculino, " +
+                 "SUM(CASE WHEN genero IN ('F', 'Feminino') THEN 1 ELSE 0 END) AS Feminino, " +
+                 "SUM(CASE WHEN genero NOT IN ('M', 'Masculino', 'F', 'Feminino') OR genero IS NULL THEN 1 ELSE 0 END) AS Outros " +
+                 "FROM cliente";
+    Object[] resultado = new Object[]{0, 0, 0}; // [Masculino, Feminino, Outros]
+    try (Connection conn = conectar.getConnect();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+            resultado[0] = rs.getInt("Masculino");
+            resultado[1] = rs.getInt("Feminino");
+            resultado[2] = rs.getInt("Outros");
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return resultado;
+}
+    
+    // Retorna uma lista de arrays: cada array contém [código_zona, quantidade]
+public List<Object[]> contarClientesPorZona() {
+    String sql = "SELECT zona_postal, COUNT(*) AS quantidade " +
+                 "FROM cliente " +
+                 "WHERE zona_postal IS NOT NULL " +
+                 "GROUP BY zona_postal " +
+                 "ORDER BY zona_postal";
+    List<Object[]> lista = new ArrayList<>();
+    try (Connection conn = conectar.getConnect();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+            int zona = rs.getInt("zona_postal");
+            int qtd = rs.getInt("quantidade");
+            lista.add(new Object[]{zona, qtd});
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return lista;
+}
+
+public List<Object[]> contarClientesPorCategoria() {
+    String sql = "SELECT categoria_cliente, COUNT(*) AS quantidade " +
+                 "FROM cliente " +
+                 "WHERE categoria_cliente IS NOT NULL " +
+                 "GROUP BY categoria_cliente " +
+                 "ORDER BY categoria_cliente";
+    List<Object[]> lista = new ArrayList<>();
+    try (Connection conn = conectar.getConnect();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        while (rs.next()) {
+            String categoria = rs.getString("categoria_cliente");
+            int quantidade = rs.getInt("quantidade");
+            lista.add(new Object[]{categoria, quantidade});
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return lista;
+}
+    
 }
