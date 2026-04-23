@@ -56,6 +56,21 @@ public class SN_add extends javax.swing.JFrame {
         LB_nome1 = new javax.swing.JLabel();
         LB_nome2 = new javax.swing.JLabel();
         Voltar = new javax.swing.JButton();
+        Barra_Menu = new javax.swing.JMenuBar();
+        menu_principal = new javax.swing.JMenu();
+        menu_gestao = new javax.swing.JMenu();
+        Gestao_Novo_Cliente = new javax.swing.JMenuItem();
+        Gestao_Listar_Cliente = new javax.swing.JMenuItem();
+        Gestao_Editar_Cliente = new javax.swing.JMenuItem();
+        Gestao_Separador = new javax.swing.JPopupMenu.Separator();
+        Gestao_Novo_Produto = new javax.swing.JMenuItem();
+        Gestao_Listar_Produto = new javax.swing.JMenuItem();
+        menu_sensor = new javax.swing.JMenu();
+        NovoSensor = new javax.swing.JMenuItem();
+        ListarSensor = new javax.swing.JMenuItem();
+        EditarSensor = new javax.swing.JMenuItem();
+        menu_sobre = new javax.swing.JMenu();
+        menu_sair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(512, 560));
@@ -115,6 +130,93 @@ public class SN_add extends javax.swing.JFrame {
 
         getContentPane().add(Painel_Principal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 500));
 
+        menu_principal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/home.png"))); // NOI18N
+        menu_principal.setMnemonic('P');
+        menu_principal.setText("Principal");
+        menu_principal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_principalMouseClicked(evt);
+            }
+        });
+        Barra_Menu.add(menu_principal);
+
+        menu_gestao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/gestao.png"))); // NOI18N
+        menu_gestao.setMnemonic('G');
+        menu_gestao.setText("Gestão");
+
+        Gestao_Novo_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Novo_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/NC.png"))); // NOI18N
+        Gestao_Novo_Cliente.setMnemonic('C');
+        Gestao_Novo_Cliente.setText("Novo Cliente");
+        Gestao_Novo_Cliente.addActionListener(this::Gestao_Novo_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Novo_Cliente);
+
+        Gestao_Listar_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Listar_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/LC.png"))); // NOI18N
+        Gestao_Listar_Cliente.setMnemonic('L');
+        Gestao_Listar_Cliente.setText("Listar Cliente");
+        Gestao_Listar_Cliente.addActionListener(this::Gestao_Listar_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Listar_Cliente);
+
+        Gestao_Editar_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Editar_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/CLEDI.png"))); // NOI18N
+        Gestao_Editar_Cliente.setText("Editar Cliente");
+        Gestao_Editar_Cliente.addActionListener(this::Gestao_Editar_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Editar_Cliente);
+        menu_gestao.add(Gestao_Separador);
+
+        Gestao_Novo_Produto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Novo_Produto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/NP.png"))); // NOI18N
+        Gestao_Novo_Produto.setMnemonic('N');
+        Gestao_Novo_Produto.setText("Novo Produto");
+        menu_gestao.add(Gestao_Novo_Produto);
+
+        Gestao_Listar_Produto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Listar_Produto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/LP.png"))); // NOI18N
+        Gestao_Listar_Produto.setMnemonic('R');
+        Gestao_Listar_Produto.setText("Listar Produto");
+        menu_gestao.add(Gestao_Listar_Produto);
+
+        Barra_Menu.add(menu_gestao);
+
+        menu_sensor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/Sensor.png"))); // NOI18N
+        menu_sensor.setMnemonic('S');
+        menu_sensor.setText("Sensor");
+
+        NovoSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        NovoSensor.setText("Novo Sensor");
+        NovoSensor.addActionListener(this::NovoSensorActionPerformed);
+        menu_sensor.add(NovoSensor);
+
+        ListarSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        ListarSensor.setText("Listar Sensor");
+        ListarSensor.addActionListener(this::ListarSensorActionPerformed);
+        menu_sensor.add(ListarSensor);
+
+        EditarSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK));
+        EditarSensor.setText("Editar Sensor");
+        EditarSensor.addActionListener(this::EditarSensorActionPerformed);
+        menu_sensor.add(EditarSensor);
+
+        Barra_Menu.add(menu_sensor);
+
+        menu_sobre.setIcon(new javax.swing.ImageIcon("C:\\Users\\betue\\Downloads\\round.png")); // NOI18N
+        menu_sobre.setMnemonic('O');
+        menu_sobre.setText("Sobre");
+        Barra_Menu.add(menu_sobre);
+
+        menu_sair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/sair.png"))); // NOI18N
+        menu_sair.setMnemonic('A');
+        menu_sair.setText("Sair");
+        menu_sair.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_sairMouseClicked(evt);
+            }
+        });
+        Barra_Menu.add(menu_sair);
+
+        setJMenuBar(Barra_Menu);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -130,6 +232,44 @@ public class SN_add extends javax.swing.JFrame {
         dispose();
         new Pagina_Principal().setVisible(true);
     }//GEN-LAST:event_VoltarActionPerformed
+
+    private void Gestao_Novo_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Novo_ClienteActionPerformed
+        dispose();
+        new CL_add().setVisible(true);
+    }//GEN-LAST:event_Gestao_Novo_ClienteActionPerformed
+
+    private void Gestao_Listar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Listar_ClienteActionPerformed
+        dispose();
+        new CL_listar().setVisible(true);
+    }//GEN-LAST:event_Gestao_Listar_ClienteActionPerformed
+
+    private void Gestao_Editar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Editar_ClienteActionPerformed
+        dispose();
+        new CL_updt().setVisible(true);
+    }//GEN-LAST:event_Gestao_Editar_ClienteActionPerformed
+
+    private void NovoSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovoSensorActionPerformed
+        dispose();
+        new SN_add().setVisible(true);
+    }//GEN-LAST:event_NovoSensorActionPerformed
+
+    private void ListarSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListarSensorActionPerformed
+
+    }//GEN-LAST:event_ListarSensorActionPerformed
+
+    private void EditarSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarSensorActionPerformed
+        dispose();
+        new SN_updt().setVisible(true);
+    }//GEN-LAST:event_EditarSensorActionPerformed
+
+    private void menu_sairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_sairMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_menu_sairMouseClicked
+
+    private void menu_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_principalMouseClicked
+        dispose();
+        new Pagina_Principal().setVisible(true);
+    }//GEN-LAST:event_menu_principalMouseClicked
 
     /**
      * @param args the command line arguments
@@ -159,10 +299,20 @@ public class SN_add extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar Barra_Menu;
+    private javax.swing.JMenuItem EditarSensor;
     private javax.swing.JButton Enviar;
+    private javax.swing.JMenuItem Gestao_Editar_Cliente;
+    private javax.swing.JMenuItem Gestao_Listar_Cliente;
+    private javax.swing.JMenuItem Gestao_Listar_Produto;
+    private javax.swing.JMenuItem Gestao_Novo_Cliente;
+    private javax.swing.JMenuItem Gestao_Novo_Produto;
+    private javax.swing.JPopupMenu.Separator Gestao_Separador;
     private javax.swing.JLabel LB_nome;
     private javax.swing.JLabel LB_nome1;
     private javax.swing.JLabel LB_nome2;
+    private javax.swing.JMenuItem ListarSensor;
+    private javax.swing.JMenuItem NovoSensor;
     private javax.swing.JPanel Painel_Principal;
     private javax.swing.JLabel Title;
     private javax.swing.JButton Voltar;
@@ -170,6 +320,11 @@ public class SN_add extends javax.swing.JFrame {
     private javax.swing.JPanel footer;
     private javax.swing.JPanel header;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenu menu_gestao;
+    private javax.swing.JMenu menu_principal;
+    private javax.swing.JMenu menu_sair;
+    private javax.swing.JMenu menu_sensor;
+    private javax.swing.JMenu menu_sobre;
     private javax.swing.JLabel online;
     private javax.swing.JTextField txtnome;
     private javax.swing.JTextField txttipo;

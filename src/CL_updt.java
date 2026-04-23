@@ -312,6 +312,21 @@ public class CL_updt extends javax.swing.JFrame {
         txtCodId = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         delete = new javax.swing.JButton();
+        Barra_Menu = new javax.swing.JMenuBar();
+        menu_principal = new javax.swing.JMenu();
+        menu_gestao = new javax.swing.JMenu();
+        Gestao_Novo_Cliente = new javax.swing.JMenuItem();
+        Gestao_Listar_Cliente = new javax.swing.JMenuItem();
+        Gestao_Editar_Cliente = new javax.swing.JMenuItem();
+        Gestao_Separador = new javax.swing.JPopupMenu.Separator();
+        Gestao_Novo_Produto = new javax.swing.JMenuItem();
+        Gestao_Listar_Produto = new javax.swing.JMenuItem();
+        menu_sensor = new javax.swing.JMenu();
+        NovoSensor = new javax.swing.JMenuItem();
+        ListarSensor = new javax.swing.JMenuItem();
+        EditarSensor = new javax.swing.JMenuItem();
+        menu_sobre = new javax.swing.JMenu();
+        menu_sair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(650, 700));
@@ -455,6 +470,93 @@ public class CL_updt extends javax.swing.JFrame {
 
         Painel_Principal.add(scrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 600, 540));
 
+        menu_principal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/home.png"))); // NOI18N
+        menu_principal.setMnemonic('P');
+        menu_principal.setText("Principal");
+        menu_principal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_principalMouseClicked(evt);
+            }
+        });
+        Barra_Menu.add(menu_principal);
+
+        menu_gestao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/gestao.png"))); // NOI18N
+        menu_gestao.setMnemonic('G');
+        menu_gestao.setText("Gestão");
+
+        Gestao_Novo_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Novo_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/NC.png"))); // NOI18N
+        Gestao_Novo_Cliente.setMnemonic('C');
+        Gestao_Novo_Cliente.setText("Novo Cliente");
+        Gestao_Novo_Cliente.addActionListener(this::Gestao_Novo_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Novo_Cliente);
+
+        Gestao_Listar_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Listar_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/LC.png"))); // NOI18N
+        Gestao_Listar_Cliente.setMnemonic('L');
+        Gestao_Listar_Cliente.setText("Listar Cliente");
+        Gestao_Listar_Cliente.addActionListener(this::Gestao_Listar_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Listar_Cliente);
+
+        Gestao_Editar_Cliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Editar_Cliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/CLEDI.png"))); // NOI18N
+        Gestao_Editar_Cliente.setText("Editar Cliente");
+        Gestao_Editar_Cliente.addActionListener(this::Gestao_Editar_ClienteActionPerformed);
+        menu_gestao.add(Gestao_Editar_Cliente);
+        menu_gestao.add(Gestao_Separador);
+
+        Gestao_Novo_Produto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Novo_Produto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/NP.png"))); // NOI18N
+        Gestao_Novo_Produto.setMnemonic('N');
+        Gestao_Novo_Produto.setText("Novo Produto");
+        menu_gestao.add(Gestao_Novo_Produto);
+
+        Gestao_Listar_Produto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        Gestao_Listar_Produto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/LP.png"))); // NOI18N
+        Gestao_Listar_Produto.setMnemonic('R');
+        Gestao_Listar_Produto.setText("Listar Produto");
+        menu_gestao.add(Gestao_Listar_Produto);
+
+        Barra_Menu.add(menu_gestao);
+
+        menu_sensor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/Sensor.png"))); // NOI18N
+        menu_sensor.setMnemonic('S');
+        menu_sensor.setText("Sensor");
+
+        NovoSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        NovoSensor.setText("Novo Sensor");
+        NovoSensor.addActionListener(this::NovoSensorActionPerformed);
+        menu_sensor.add(NovoSensor);
+
+        ListarSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        ListarSensor.setText("Listar Sensor");
+        ListarSensor.addActionListener(this::ListarSensorActionPerformed);
+        menu_sensor.add(ListarSensor);
+
+        EditarSensor.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK));
+        EditarSensor.setText("Editar Sensor");
+        EditarSensor.addActionListener(this::EditarSensorActionPerformed);
+        menu_sensor.add(EditarSensor);
+
+        Barra_Menu.add(menu_sensor);
+
+        menu_sobre.setIcon(new javax.swing.ImageIcon("C:\\Users\\betue\\Downloads\\round.png")); // NOI18N
+        menu_sobre.setMnemonic('O');
+        menu_sobre.setText("Sobre");
+        Barra_Menu.add(menu_sobre);
+
+        menu_sair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/sair.png"))); // NOI18N
+        menu_sair.setMnemonic('A');
+        menu_sair.setText("Sair");
+        menu_sair.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menu_sairMouseClicked(evt);
+            }
+        });
+        Barra_Menu.add(menu_sair);
+
+        setJMenuBar(Barra_Menu);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -515,6 +617,44 @@ public class CL_updt extends javax.swing.JFrame {
         OP.deleteCliente(Integer.parseInt(txtCodId.getText()));
     }//GEN-LAST:event_deleteActionPerformed
 
+    private void menu_principalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_principalMouseClicked
+        dispose();
+        new Pagina_Principal().setVisible(true);
+    }//GEN-LAST:event_menu_principalMouseClicked
+
+    private void Gestao_Novo_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Novo_ClienteActionPerformed
+        dispose();
+        new CL_add().setVisible(true);
+    }//GEN-LAST:event_Gestao_Novo_ClienteActionPerformed
+
+    private void Gestao_Listar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Listar_ClienteActionPerformed
+        dispose();
+        new CL_listar().setVisible(true);
+    }//GEN-LAST:event_Gestao_Listar_ClienteActionPerformed
+
+    private void Gestao_Editar_ClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gestao_Editar_ClienteActionPerformed
+        dispose();
+        new CL_updt().setVisible(true);
+    }//GEN-LAST:event_Gestao_Editar_ClienteActionPerformed
+
+    private void NovoSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NovoSensorActionPerformed
+        dispose();
+        new SN_add().setVisible(true);
+    }//GEN-LAST:event_NovoSensorActionPerformed
+
+    private void ListarSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListarSensorActionPerformed
+
+    }//GEN-LAST:event_ListarSensorActionPerformed
+
+    private void EditarSensorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarSensorActionPerformed
+        dispose();
+        new SN_updt().setVisible(true);
+    }//GEN-LAST:event_EditarSensorActionPerformed
+
+    private void menu_sairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menu_sairMouseClicked
+        System.exit(0);
+    }//GEN-LAST:event_menu_sairMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -541,7 +681,17 @@ public class CL_updt extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar Barra_Menu;
+    private javax.swing.JMenuItem EditarSensor;
     private javax.swing.JButton Enviar;
+    private javax.swing.JMenuItem Gestao_Editar_Cliente;
+    private javax.swing.JMenuItem Gestao_Listar_Cliente;
+    private javax.swing.JMenuItem Gestao_Listar_Produto;
+    private javax.swing.JMenuItem Gestao_Novo_Cliente;
+    private javax.swing.JMenuItem Gestao_Novo_Produto;
+    private javax.swing.JPopupMenu.Separator Gestao_Separador;
+    private javax.swing.JMenuItem ListarSensor;
+    private javax.swing.JMenuItem NovoSensor;
     private javax.swing.JPanel Painel_Principal;
     private javax.swing.JLabel Title;
     private javax.swing.JButton Voltar;
@@ -569,6 +719,11 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JLabel lblZonaPostal;
     private javax.swing.JLabel lblcartaoId;
     private javax.swing.JLabel lblimagem;
+    private javax.swing.JMenu menu_gestao;
+    private javax.swing.JMenu menu_principal;
+    private javax.swing.JMenu menu_sair;
+    private javax.swing.JMenu menu_sensor;
+    private javax.swing.JMenu menu_sobre;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextField txtCartaoId;
     private javax.swing.JTextField txtCategoria;
