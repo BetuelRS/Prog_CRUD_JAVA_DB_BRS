@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+import java.awt.Color;
 import javax.swing.JOptionPane;
 import java.util.Map;
 import java.sql.Date;
@@ -18,8 +19,18 @@ public class CL_updt extends javax.swing.JFrame {
      */
     public CL_updt() {
         initComponents();
+        CarregarDados();
     }
     
+    private void CarregarDados(){
+    if(OP.TestarLigacao()){
+        online.setForeground(Color.green);
+        online.setText("Ligação DB: Ativa");
+    }else{
+    online.setForeground(Color.red);
+    online.setText("Ligação DB: Desativa");
+    }
+    }
     
     private boolean validarCampos() {
     // Limpa mensagens de erro (opcional: usar JLabel para exibir)
@@ -38,7 +49,7 @@ public class CL_updt extends javax.swing.JFrame {
 
     // --- Nome (obrigatório, mínimo 3 caracteres) ---
     String nome = txtNome.getText().trim();
-    if (nome.isEmpty()) {
+    if (nome.isEmpty() && !nome.matches("[a-zA-ZÀ-ÿ\\s]+")) {
         erro += "- Nome é obrigatório.\n";
     } else if (nome.length() < 3) {
         erro += "- Nome deve ter pelo menos 3 caracteres.\n";
@@ -157,8 +168,15 @@ public class CL_updt extends javax.swing.JFrame {
     String codPostalStr = txtCodigoPostal.getText().trim();
     if (codPostalStr.isEmpty()) {
         erro += "- Código postal é obrigatório.\n";
-    } else if (!codPostalStr.matches("\\d{4}-\\d{3}")) {
-        erro += "- Código postal inválido. Use o formato 0000-000.\n";
+    } else{
+        try {
+            int cod = Integer.parseInt(zonaStr);
+            if (codPostalStr.length() != 4) {
+                erro += "- Código postal deve ter 4 dígitos.\n";
+            }
+        } catch (NumberFormatException e) {
+            erro += "- Código postal deve conter apenas números.\n";
+        }
     }
 
     // --- Nacionalidade (obrigatório, apenas letras) ---
@@ -268,8 +286,6 @@ public class CL_updt extends javax.swing.JFrame {
         Painel_Principal = new javax.swing.JPanel();
         header = new javax.swing.JPanel();
         Title = new javax.swing.JLabel();
-        footer = new javax.swing.JPanel();
-        exit = new javax.swing.JButton();
         scrollPane = new javax.swing.JScrollPane();
         formPanel = new javax.swing.JPanel();
         lblNome = new javax.swing.JLabel();
@@ -312,6 +328,32 @@ public class CL_updt extends javax.swing.JFrame {
         txtCodId = new javax.swing.JTextField();
         btnBuscar = new javax.swing.JButton();
         delete = new javax.swing.JButton();
+        txtLocalidade = new javax.swing.JTextField();
+        lblLocalidade = new javax.swing.JLabel();
+        LimpaNif = new javax.swing.JButton();
+        LimparOBS = new javax.swing.JButton();
+        LimparImagem = new javax.swing.JButton();
+        LimparRedesSOciais = new javax.swing.JButton();
+        LimparMorada = new javax.swing.JButton();
+        LimparZonaPostal = new javax.swing.JButton();
+        LimparCodPostal = new javax.swing.JButton();
+        LimparLocalidade = new javax.swing.JButton();
+        LimparNascionalidade = new javax.swing.JButton();
+        LimparPais = new javax.swing.JButton();
+        LimparDataRegisto = new javax.swing.JButton();
+        LimpaNome = new javax.swing.JButton();
+        LimpaCat = new javax.swing.JButton();
+        LimpaDat = new javax.swing.JButton();
+        LimpaEmail = new javax.swing.JButton();
+        LimpaGen = new javax.swing.JButton();
+        LimpaCartaoID = new javax.swing.JButton();
+        LimparTelefone = new javax.swing.JButton();
+        footer = new javax.swing.JPanel();
+        exit = new javax.swing.JButton();
+        online = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         Barra_Menu = new javax.swing.JMenuBar();
         menu_principal = new javax.swing.JMenu();
         menu_gestao = new javax.swing.JMenu();
@@ -329,9 +371,9 @@ public class CL_updt extends javax.swing.JFrame {
         menu_sair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(650, 700));
-        setMinimumSize(new java.awt.Dimension(650, 700));
-        setPreferredSize(new java.awt.Dimension(650, 700));
+        setMaximumSize(new java.awt.Dimension(650, 740));
+        setMinimumSize(new java.awt.Dimension(650, 740));
+        setPreferredSize(new java.awt.Dimension(650, 720));
 
         Painel_Principal.setBackground(new java.awt.Color(0, 51, 102));
         Painel_Principal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -345,15 +387,6 @@ public class CL_updt extends javax.swing.JFrame {
 
         Painel_Principal.add(header, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 620, 40));
 
-        footer.setBackground(new java.awt.Color(0, 153, 153));
-        footer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        exit.setText("Sair");
-        exit.addActionListener(this::exitActionPerformed);
-        footer.add(exit, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, -1, -1));
-
-        Painel_Principal.add(footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 620, 40));
-
         formPanel.setBackground(new java.awt.Color(0, 153, 153));
         formPanel.setMaximumSize(new java.awt.Dimension(600, 850));
         formPanel.setMinimumSize(new java.awt.Dimension(600, 850));
@@ -363,12 +396,12 @@ public class CL_updt extends javax.swing.JFrame {
         lblNome.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblNome.setText("Nome");
         formPanel.add(lblNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 180, 25));
-        formPanel.add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 350, 25));
+        formPanel.add(txtNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 70, 260, 25));
 
         lblCategoria.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblCategoria.setText("Categoria");
         formPanel.add(lblCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 180, 25));
-        formPanel.add(txtCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 350, 25));
+        formPanel.add(txtCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 110, 260, 25));
 
         lblDataNasc.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblDataNasc.setText("Data de Nascimento");
@@ -377,8 +410,8 @@ public class CL_updt extends javax.swing.JFrame {
         lblNif.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblNif.setText("NIF");
         formPanel.add(lblNif, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 190, 180, 25));
-        formPanel.add(txtDataNasc, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 150, 350, 25));
-        formPanel.add(txtNif, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 350, 25));
+        formPanel.add(txtDataNasc, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 150, 260, 25));
+        formPanel.add(txtNif, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 190, 260, 25));
 
         lblEmail.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblEmail.setText("Email");
@@ -395,20 +428,20 @@ public class CL_updt extends javax.swing.JFrame {
         lblTelefone.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblTelefone.setText("Telefone");
         formPanel.add(lblTelefone, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 180, 25));
-        formPanel.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 350, 25));
-        formPanel.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 270, 350, 25));
-        formPanel.add(txtCartaoId, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 310, 350, 25));
-        formPanel.add(txtTelefone, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 350, 25));
+        formPanel.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 230, 260, 25));
+        formPanel.add(txtGenero, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 270, 260, 25));
+        formPanel.add(txtCartaoId, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 310, 260, 25));
+        formPanel.add(txtTelefone, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 350, 260, 25));
 
         lblRedesSociais.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblRedesSociais.setText("Redes Sociais");
         formPanel.add(lblRedesSociais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 390, 180, 25));
-        formPanel.add(txtRedesSociais, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 390, 350, 25));
+        formPanel.add(txtRedesSociais, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 390, 260, 25));
 
         lblMorada.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblMorada.setText("Morada");
         formPanel.add(lblMorada, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 430, 180, 25));
-        formPanel.add(txtMorada, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 430, 350, 25));
+        formPanel.add(txtMorada, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 430, 260, 25));
 
         lblZonaPostal.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblZonaPostal.setText("Zona Postal");
@@ -417,41 +450,41 @@ public class CL_updt extends javax.swing.JFrame {
         lblCodigoPostal.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblCodigoPostal.setText("Código Postal");
         formPanel.add(lblCodigoPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 510, 180, 25));
-        formPanel.add(txtZonaPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 470, 350, 25));
-        formPanel.add(txtCodigoPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 510, 350, 25));
+        formPanel.add(txtZonaPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 470, 260, 25));
+        formPanel.add(txtCodigoPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 510, 260, 25));
 
         lblNacionalidade.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblNacionalidade.setText("Nacionalidade");
-        formPanel.add(lblNacionalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, 180, 25));
+        formPanel.add(lblNacionalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 590, 180, 25));
 
         lblPais.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblPais.setText("País");
-        formPanel.add(lblPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 590, 180, 25));
+        formPanel.add(lblPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 630, 180, 25));
 
         lblimagem.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblimagem.setText("Imagem");
-        formPanel.add(lblimagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 670, 180, 25));
+        formPanel.add(lblimagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 180, 25));
 
         lblObs.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblObs.setText("OBS");
-        formPanel.add(lblObs, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 710, 180, 25));
-        formPanel.add(txtNacionalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 550, 350, 25));
-        formPanel.add(txtPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 590, 350, 25));
-        formPanel.add(txtimagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 670, 350, 25));
-        formPanel.add(txtObs, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 710, 350, 25));
+        formPanel.add(lblObs, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 750, 180, 25));
+        formPanel.add(txtNacionalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 590, 260, 25));
+        formPanel.add(txtPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 630, 260, 25));
+        formPanel.add(txtimagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 710, 260, 25));
+        formPanel.add(txtObs, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 750, 260, 25));
 
         Voltar.setText("Voltar");
         Voltar.addActionListener(this::VoltarActionPerformed);
-        formPanel.add(Voltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 760, -1, -1));
+        formPanel.add(Voltar, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 800, -1, -1));
 
         Enviar.setText("Enviar");
         Enviar.addActionListener(this::EnviarActionPerformed);
-        formPanel.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 760, -1, -1));
+        formPanel.add(Enviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 800, -1, -1));
 
         lblDataRegisto.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblDataRegisto.setText("Data de Registo");
-        formPanel.add(lblDataRegisto, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 630, 180, 25));
-        formPanel.add(txtDataRegisto, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 630, 350, 25));
+        formPanel.add(lblDataRegisto, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 670, 180, 25));
+        formPanel.add(txtDataRegisto, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 670, 260, 25));
 
         lblCodId.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
         lblCodId.setText("Código de Identificação");
@@ -464,11 +497,117 @@ public class CL_updt extends javax.swing.JFrame {
 
         delete.setText("Excluir");
         delete.addActionListener(this::deleteActionPerformed);
-        formPanel.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 760, -1, -1));
+        formPanel.add(delete, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 800, -1, -1));
+        formPanel.add(txtLocalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 550, 260, 25));
+
+        lblLocalidade.setFont(new java.awt.Font("Cambria", 1, 14)); // NOI18N
+        lblLocalidade.setText("Localidade");
+        formPanel.add(lblLocalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, 180, 25));
+
+        LimpaNif.setText("Limpar");
+        LimpaNif.addActionListener(this::LimpaNifActionPerformed);
+        formPanel.add(LimpaNif, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 190, -1, -1));
+
+        LimparOBS.setText("Limpar");
+        LimparOBS.addActionListener(this::LimparOBSActionPerformed);
+        formPanel.add(LimparOBS, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 750, -1, -1));
+
+        LimparImagem.setText("Limpar");
+        LimparImagem.addActionListener(this::LimparImagemActionPerformed);
+        formPanel.add(LimparImagem, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 710, -1, -1));
+
+        LimparRedesSOciais.setText("Limpar");
+        LimparRedesSOciais.addActionListener(this::LimparRedesSOciaisActionPerformed);
+        formPanel.add(LimparRedesSOciais, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 390, -1, -1));
+
+        LimparMorada.setText("Limpar");
+        LimparMorada.addActionListener(this::LimparMoradaActionPerformed);
+        formPanel.add(LimparMorada, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 430, -1, -1));
+
+        LimparZonaPostal.setText("Limpar");
+        LimparZonaPostal.addActionListener(this::LimparZonaPostalActionPerformed);
+        formPanel.add(LimparZonaPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 470, -1, -1));
+
+        LimparCodPostal.setText("Limpar");
+        LimparCodPostal.addActionListener(this::LimparCodPostalActionPerformed);
+        formPanel.add(LimparCodPostal, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 510, -1, -1));
+
+        LimparLocalidade.setText("Limpar");
+        LimparLocalidade.addActionListener(this::LimparLocalidadeActionPerformed);
+        formPanel.add(LimparLocalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 550, -1, -1));
+
+        LimparNascionalidade.setText("Limpar");
+        LimparNascionalidade.addActionListener(this::LimparNascionalidadeActionPerformed);
+        formPanel.add(LimparNascionalidade, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 590, -1, -1));
+
+        LimparPais.setText("Limpar");
+        LimparPais.addActionListener(this::LimparPaisActionPerformed);
+        formPanel.add(LimparPais, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 630, -1, -1));
+
+        LimparDataRegisto.setText("Limpar");
+        LimparDataRegisto.addActionListener(this::LimparDataRegistoActionPerformed);
+        formPanel.add(LimparDataRegisto, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 670, -1, -1));
+
+        LimpaNome.setText("Limpar");
+        LimpaNome.addActionListener(this::LimpaNomeActionPerformed);
+        formPanel.add(LimpaNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 70, -1, -1));
+
+        LimpaCat.setText("Limpar");
+        LimpaCat.addActionListener(this::LimpaCatActionPerformed);
+        formPanel.add(LimpaCat, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 110, -1, -1));
+
+        LimpaDat.setText("Limpar");
+        LimpaDat.addActionListener(this::LimpaDatActionPerformed);
+        formPanel.add(LimpaDat, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 150, -1, -1));
+
+        LimpaEmail.setText("Limpar");
+        LimpaEmail.addActionListener(this::LimpaEmailActionPerformed);
+        formPanel.add(LimpaEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 230, -1, -1));
+
+        LimpaGen.setText("Limpar");
+        LimpaGen.addActionListener(this::LimpaGenActionPerformed);
+        formPanel.add(LimpaGen, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 270, -1, -1));
+
+        LimpaCartaoID.setText("Limpar");
+        LimpaCartaoID.addActionListener(this::LimpaCartaoIDActionPerformed);
+        formPanel.add(LimpaCartaoID, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 310, -1, -1));
+
+        LimparTelefone.setText("Limpar");
+        LimparTelefone.addActionListener(this::LimparTelefoneActionPerformed);
+        formPanel.add(LimparTelefone, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 350, -1, -1));
 
         scrollPane.setViewportView(formPanel);
 
         Painel_Principal.add(scrollPane, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 600, 540));
+
+        footer.setBackground(new java.awt.Color(0, 153, 153));
+        footer.setMaximumSize(new java.awt.Dimension(800, 700));
+        footer.setMinimumSize(new java.awt.Dimension(800, 700));
+        footer.setPreferredSize(new java.awt.Dimension(800, 700));
+        footer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        exit.setText("Sair");
+        exit.addActionListener(this::exitActionPerformed);
+        footer.add(exit, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 13, -1, 30));
+
+        online.setText("Online");
+        footer.add(online, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 100, 50));
+
+        jLabel1.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel1.setText("BetuelRS");
+        footer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 2, 80, 50));
+
+        jLabel2.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Conecção DB:");
+        jLabel2.setAlignmentY(0.0F);
+        footer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 0, -1, 50));
+
+        jLabel3.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel3.setText("Exercícios Java V2");
+        footer.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 2, -1, 50));
+
+        Painel_Principal.add(footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 610, 50));
 
         menu_principal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagem/home.png"))); // NOI18N
         menu_principal.setMnemonic('P');
@@ -561,7 +700,7 @@ public class CL_updt extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Painel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(Painel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, 642, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -596,7 +735,8 @@ public class CL_updt extends javax.swing.JFrame {
     txtRedesSociais.getText(), 
     txtMorada.getText(), 
     Integer.parseInt(txtZonaPostal.getText()), 
-    Integer.parseInt(txtCodigoPostal.getText().trim().split("-")[0]), 
+    Integer.parseInt(txtCodigoPostal.getText()), 
+    txtLocalidade.getText(),
     txtNacionalidade.getText(), 
     txtPais.getText(), 
     java.sql.Date.valueOf(txtDataRegisto.getText()), // String -> Date
@@ -604,10 +744,6 @@ public class CL_updt extends javax.swing.JFrame {
     txtObs.getText()
 );
     }//GEN-LAST:event_EnviarActionPerformed
-
-    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         buscarActionPerformed(evt);
@@ -655,6 +791,83 @@ public class CL_updt extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_menu_sairMouseClicked
 
+    private void LimpaNifActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaNifActionPerformed
+        txtNif.setText("");
+    }//GEN-LAST:event_LimpaNifActionPerformed
+
+    private void LimparOBSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparOBSActionPerformed
+        txtObs.setText("");
+    }//GEN-LAST:event_LimparOBSActionPerformed
+
+    private void LimparImagemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparImagemActionPerformed
+        txtimagem.setText("");
+    }//GEN-LAST:event_LimparImagemActionPerformed
+
+    private void LimparRedesSOciaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparRedesSOciaisActionPerformed
+        txtRedesSociais.setText("");
+    }//GEN-LAST:event_LimparRedesSOciaisActionPerformed
+
+    private void LimparMoradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparMoradaActionPerformed
+        txtMorada.setText("");
+    }//GEN-LAST:event_LimparMoradaActionPerformed
+
+    private void LimparZonaPostalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparZonaPostalActionPerformed
+        txtZonaPostal.setText("");
+    }//GEN-LAST:event_LimparZonaPostalActionPerformed
+
+    private void LimparCodPostalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparCodPostalActionPerformed
+        txtCodigoPostal.setText("");
+    }//GEN-LAST:event_LimparCodPostalActionPerformed
+
+    private void LimparLocalidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparLocalidadeActionPerformed
+        txtLocalidade.setText("");
+    }//GEN-LAST:event_LimparLocalidadeActionPerformed
+
+    private void LimparNascionalidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparNascionalidadeActionPerformed
+        txtNacionalidade.setText("");
+    }//GEN-LAST:event_LimparNascionalidadeActionPerformed
+
+    private void LimparPaisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparPaisActionPerformed
+        txtPais.setText("");
+    }//GEN-LAST:event_LimparPaisActionPerformed
+
+    private void LimparDataRegistoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparDataRegistoActionPerformed
+        txtDataRegisto.setText("");
+    }//GEN-LAST:event_LimparDataRegistoActionPerformed
+
+    private void LimpaNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaNomeActionPerformed
+        txtNome.setText("");
+    }//GEN-LAST:event_LimpaNomeActionPerformed
+
+    private void LimpaCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaCatActionPerformed
+        txtCategoria.setText("");
+    }//GEN-LAST:event_LimpaCatActionPerformed
+
+    private void LimpaDatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaDatActionPerformed
+        txtDataNasc.setText("");
+    }//GEN-LAST:event_LimpaDatActionPerformed
+
+    private void LimpaEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaEmailActionPerformed
+        txtEmail.setText("");
+    }//GEN-LAST:event_LimpaEmailActionPerformed
+
+    private void LimpaGenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaGenActionPerformed
+        txtGenero.setText("");
+    }//GEN-LAST:event_LimpaGenActionPerformed
+
+    private void LimpaCartaoIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpaCartaoIDActionPerformed
+        txtCartaoId.setText("");
+    }//GEN-LAST:event_LimpaCartaoIDActionPerformed
+
+    private void LimparTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimparTelefoneActionPerformed
+        txtTelefone.setText("");
+
+    }//GEN-LAST:event_LimparTelefoneActionPerformed
+
+    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_exitActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -690,6 +903,24 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JMenuItem Gestao_Novo_Cliente;
     private javax.swing.JMenuItem Gestao_Novo_Produto;
     private javax.swing.JPopupMenu.Separator Gestao_Separador;
+    private javax.swing.JButton LimpaCartaoID;
+    private javax.swing.JButton LimpaCat;
+    private javax.swing.JButton LimpaDat;
+    private javax.swing.JButton LimpaEmail;
+    private javax.swing.JButton LimpaGen;
+    private javax.swing.JButton LimpaNif;
+    private javax.swing.JButton LimpaNome;
+    private javax.swing.JButton LimparCodPostal;
+    private javax.swing.JButton LimparDataRegisto;
+    private javax.swing.JButton LimparImagem;
+    private javax.swing.JButton LimparLocalidade;
+    private javax.swing.JButton LimparMorada;
+    private javax.swing.JButton LimparNascionalidade;
+    private javax.swing.JButton LimparOBS;
+    private javax.swing.JButton LimparPais;
+    private javax.swing.JButton LimparRedesSOciais;
+    private javax.swing.JButton LimparTelefone;
+    private javax.swing.JButton LimparZonaPostal;
     private javax.swing.JMenuItem ListarSensor;
     private javax.swing.JMenuItem NovoSensor;
     private javax.swing.JPanel Painel_Principal;
@@ -701,6 +932,9 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JPanel footer;
     private javax.swing.JPanel formPanel;
     private javax.swing.JPanel header;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblCodId;
     private javax.swing.JLabel lblCodigoPostal;
@@ -708,6 +942,7 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JLabel lblDataRegisto;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblGenero;
+    private javax.swing.JLabel lblLocalidade;
     private javax.swing.JLabel lblMorada;
     private javax.swing.JLabel lblNacionalidade;
     private javax.swing.JLabel lblNif;
@@ -724,6 +959,7 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JMenu menu_sair;
     private javax.swing.JMenu menu_sensor;
     private javax.swing.JMenu menu_sobre;
+    private javax.swing.JLabel online;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JTextField txtCartaoId;
     private javax.swing.JTextField txtCategoria;
@@ -733,6 +969,7 @@ public class CL_updt extends javax.swing.JFrame {
     private javax.swing.JTextField txtDataRegisto;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtGenero;
+    private javax.swing.JTextField txtLocalidade;
     private javax.swing.JTextField txtMorada;
     private javax.swing.JTextField txtNacionalidade;
     private javax.swing.JTextField txtNif;

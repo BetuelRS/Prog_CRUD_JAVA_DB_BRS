@@ -104,9 +104,9 @@ public class Pagina_Principal extends javax.swing.JFrame {
     private void initComponents() {
 
         Painel_Principal = new javax.swing.JPanel();
-        online = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         exit = new javax.swing.JButton();
+        online = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         Table_sensores = new javax.swing.JTable();
@@ -144,15 +144,15 @@ public class Pagina_Principal extends javax.swing.JFrame {
         Painel_Principal.setBackground(new java.awt.Color(0, 51, 102));
         Painel_Principal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        online.setText("Online");
-        Painel_Principal.add(online, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 440, -1, -1));
-
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         exit.setText("Sair");
         exit.addActionListener(this::exitActionPerformed);
         jPanel1.add(exit, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 10, -1, -1));
+
+        online.setText("Online");
+        jPanel1.add(online, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 10, -1, -1));
 
         Painel_Principal.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 820, 40));
 

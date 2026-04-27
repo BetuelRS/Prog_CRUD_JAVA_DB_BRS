@@ -122,8 +122,8 @@ public class crud_db {
         }
     
         // Método para CRUD clientes
-    public void insertCliente(String nome_cliente, String categoria_cliente, Date data_nasc, int nif, String email, String genero, int cartao_identificacao, int numero_telefone, String redes_sociais, String morada, int zona_postal, int cod_postal, String nacionalidade, String pais, Date data_registo, String imagem, String OBS){
-        String sql = "insert into cliente values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void insertCliente(String nome_cliente, String categoria_cliente, Date data_nasc, int nif, String email, String genero, int cartao_identificacao, int numero_telefone, String redes_sociais, String morada, int zona_postal, int cod_postal, String localidade, String nacionalidade, String pais, Date data_registo, String imagem, String OBS){
+        String sql = "insert into cliente values(null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
         try {
             Connection conn = conectar.getConnect();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -139,11 +139,12 @@ public class crud_db {
             stmt.setString(10, morada);
             stmt.setInt(11, zona_postal);
             stmt.setInt(12, cod_postal);
-            stmt.setString(13, nacionalidade);
-            stmt.setString(14, pais);
-            stmt.setDate(15, (java.sql.Date) data_registo);
-            stmt.setString(16, imagem);
-            stmt.setString(17, OBS);
+            stmt.setString(13, localidade);
+            stmt.setString(14, nacionalidade);
+            stmt.setString(15, pais);
+            stmt.setDate(16, (java.sql.Date) data_registo);
+            stmt.setString(17, imagem);
+            stmt.setString(18, OBS);
 
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -181,11 +182,12 @@ public class crud_db {
         String morada, 
         int zona_postal, 
         int cod_postal, 
+        String localidade,
         String nacionalidade, 
         String pais, 
         Date data_registo, 
         String imagem, String OBS){
-        String sql = "update cliente set nome_cliente = ?, categoria_cliente = ?, data_nasc = ?, nif = ?, email = ?, genero = ?, cartao_identificacao = ?, numero_telefone = ?, redes_sociais = ?, morada = ?, zona_postal = ?, cod_postal = ?, nacionalidade = ?, pais = ?, data_registo = ?, imagem = ?, OBS = ? where cod_cliente = ?";
+        String sql = "update cliente set nome_cliente = ?, categoria_cliente = ?, data_nasc = ?, nif = ?, email = ?, genero = ?, cartao_identificacao = ?, numero_telefone = ?, redes_sociais = ?, morada = ?, zona_postal = ?, cod_postal = ?, localidade = ?, nacionalidade = ?, pais = ?, data_registo = ?, imagem = ?, OBS = ? where cod_cliente = ?";
         try { 
             Connection conn = conectar.getConnect();
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -201,12 +203,13 @@ public class crud_db {
             stmt.setString(10, morada);
             stmt.setInt(11, zona_postal);
             stmt.setInt(12, cod_postal);
-            stmt.setString(13, nacionalidade);
-            stmt.setString(14, pais);
-            stmt.setDate(15, (java.sql.Date) data_registo);
-            stmt.setString(16, imagem);
-            stmt.setString(17, OBS);
-            stmt.setInt(18, cod_cliente);
+            stmt.setString(13, localidade);
+            stmt.setString(14, nacionalidade);
+            stmt.setString(15, pais);
+            stmt.setDate(16, (java.sql.Date) data_registo);
+            stmt.setString(17, imagem);
+            stmt.setString(18, OBS);
+            stmt.setInt(19, cod_cliente);
 
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -223,24 +226,12 @@ public class crud_db {
 
     while (rs.next()) {
         Object[] row = {
-            rs.getInt("cod_cliente"),
             rs.getString("nome_cliente"),
             rs.getString("categoria_cliente"),
             rs.getDate("data_nasc"),
-            rs.getInt("nif"),
-            rs.getString("email"),
             rs.getString("genero"),
-            rs.getInt("cartao_identificacao"),
-            rs.getInt("numero_telefone"),
-            rs.getString("redes_sociais"),
-            rs.getString("morada"),
-            rs.getInt("zona_postal"),
-            rs.getInt("cod_postal"),
-            rs.getString("nacionalidade"),
-            rs.getString("pais"),
-            rs.getDate("data_registo"),
-            rs.getString("imagem"),
-            rs.getString("OBS")
+            rs.getString("localidade"),
+            rs.getString("nacionalidade")
         };
         dados.add(row);
     }
@@ -268,6 +259,8 @@ public class crud_db {
             cliente.put("morada", rs.getString("morada"));
             cliente.put("zona_postal", rs.getInt("zona_postal"));
             cliente.put("cod_postal", rs.getInt("cod_postal"));
+            cliente.put("localidade",rs.getString("localidade"));
+            cliente.put("localidade", rs.getString("localidade"));
             cliente.put("nacionalidade", rs.getString("nacionalidade"));
             cliente.put("pais", rs.getString("pais"));
             cliente.put("data_registo", rs.getDate("data_registo"));

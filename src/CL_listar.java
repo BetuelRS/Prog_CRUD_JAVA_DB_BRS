@@ -58,11 +58,14 @@ public class CL_listar extends javax.swing.JFrame {
         Title = new javax.swing.JLabel();
         footer = new javax.swing.JPanel();
         exit = new javax.swing.JButton();
+        online = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         formPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCL = new javax.swing.JTable();
-        online = new javax.swing.JLabel();
         Barra_Menu = new javax.swing.JMenuBar();
         menu_principal = new javax.swing.JMenu();
         menu_gestao = new javax.swing.JMenu();
@@ -101,7 +104,24 @@ public class CL_listar extends javax.swing.JFrame {
         exit.addActionListener(this::exitActionPerformed);
         footer.add(exit, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 10, -1, -1));
 
-        Painel_Principal.add(footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 620, 40));
+        online.setText("Online");
+        footer.add(online, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 100, 50));
+
+        jLabel1.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel1.setText("BetuelRS");
+        footer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 2, 80, 50));
+
+        jLabel2.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Conecção DB:");
+        jLabel2.setAlignmentY(0.0F);
+        footer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 0, -1, 50));
+
+        jLabel3.setFont(new java.awt.Font("Cambria Math", 1, 18)); // NOI18N
+        jLabel3.setText("Exercícios Java V2");
+        footer.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 2, -1, 50));
+
+        Painel_Principal.add(footer, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 610, 620, 50));
 
         formPanel.setBackground(new java.awt.Color(0, 153, 153));
         formPanel.setMaximumSize(new java.awt.Dimension(1500, 850));
@@ -111,25 +131,22 @@ public class CL_listar extends javax.swing.JFrame {
 
         tblCL.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Nome", "Categoria", "Nascimento", "NIF", "Email", "Genero", "CC", "Telefone", "Redes Sociais", "Morada", "Zona Postal", "Código Postal", "Nacionalidade", "Pais", "Data Registo", "Imagem", "Observações"
+                "Nome", "Categoria", "Nascimento", "Genero", "Localidade", "Nacionalidade"
             }
         ));
         jScrollPane1.setViewportView(tblCL);
 
-        formPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 47, 1480, 410));
-
-        online.setText("Online");
-        formPanel.add(online, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 70, -1));
+        formPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 47, 1290, 410));
 
         scrollPane.setViewportView(formPanel);
 
@@ -226,7 +243,7 @@ public class CL_listar extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Painel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+            .addComponent(Painel_Principal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,6 +337,9 @@ public class CL_listar extends javax.swing.JFrame {
     private javax.swing.JPanel footer;
     private javax.swing.JPanel formPanel;
     private javax.swing.JPanel header;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenu menu_gestao;
     private javax.swing.JMenu menu_principal;
