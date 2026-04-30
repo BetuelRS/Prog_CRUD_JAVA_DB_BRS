@@ -3,14 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LigaDB.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/Pagina_Principal.java</file>
             <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/crud_db.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/SN_add.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/SN_updt.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/CL_add.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/CL_updt.java</file>
-            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/CL_listar.java</file>
+            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LigaDB.java</file>
+            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LOJA_crud_db.java</file>
+            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LOJA_stylles.java</file>
+            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LOJA_MAIN.java</file>
+            <file>file:/C:/Users/betue/Documents/NetBeansProjects/proj_CRUD_DB_BetuelSouza/src/LOJA_produto_tab_db.java</file>
         </group>
     </open-files>
 </project-private>
