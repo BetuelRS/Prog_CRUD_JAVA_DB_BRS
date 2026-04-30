@@ -29,6 +29,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,6 +40,9 @@ import java.util.Date;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.BorderFactory;
+import javax.swing.UIManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -47,103 +51,147 @@ import java.io.IOException;
 
 public class Loja extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Loja.class.getName());
     private LigaDB ligaDB;
+    private LojaCRUD crud;
     private DefaultTableModel cartModel;
     private double totalCart = 0.0;
-    // Mapeia o código do produto para a linha no carrinho (para atualizar quantidades)
     private Map<Integer, Integer> produtoLinhaMap = new HashMap<>();
-    // Lista de IDs dos clientes carregados (posição = índice da combo)
     private List<Integer> clienteIds = new ArrayList<>();
+    private int ultimoCodVenda = 0;
 
     
         /**
      * Creates new form Loja
      */
-    private int ultimoCodVenda = 0;
     public Loja() {
         initComponents();
-        ligaDB = new LigaDB();
-        configurarTabelaCarrinho();
-        carregarClientes();
-        carregarProdutos();
+    Style.aplicarTema();                     // Tema moderno
+
+    ligaDB = new LigaDB();
+    crud = new LojaCRUD(ligaDB);
+    configurarTabelaCarrinho();
+    carregarClientes();
+    carregarProdutos();
+
+    // Estilizar botões principais
+    Style.estilizarBotao(btnEmitirVenda);
+    Style.estilizarBotao(btnEmitirFatura);
+    Style.estilizarBotao(btnLimparCarrinho);
+    Style.estilizarBotao(btnRemoverItem);
+    // Se tiver outros botões (Sair, Voltar) também pode estilizar
+    Style.estilizarBotao(jButton1);
+    Style.estilizarBotao(jButton2);
+
+    // Estilizar tabela
+    Style.estilizarTabela(tableCart);
+
+    // Permitir seleção múltipla
+    tableCart.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+    // Listeners (já existentes)
+    btnRemoverItem.addActionListener(e -> removerItensSelecionados());
+    btnLimparCarrinho.addActionListener(e -> limparCarrinho());
+
+    // Tornar fundo do frame e do grid ligeiramente cinza
+    getContentPane().setBackground(Style.COR_FUNDO);
+    productGridPanel.setBackground(Style.COR_FUNDO);
+     // se o JScrollPane tiver nome, ajuste
+    jScrollPane2.getViewport().setBackground(Style.COR_FUNDO);
+    // Aumentar ligeiramente o cartPanel
+    bottomPanel.setPreferredSize(new java.awt.Dimension(350, 120));
+        }
+    
+    private void removerItensSelecionados() {
+    int[] selectedRows = tableCart.getSelectedRows();
+    if (selectedRows.length == 0) {
+        JOptionPane.showMessageDialog(this, "Selecione pelo menos um item para remover.");
+        return;
     }
+    // Remover da última para a primeira (para não deslocar índices)
+    for (int i = selectedRows.length - 1; i >= 0; i--) {
+        cartModel.removeRow(selectedRows[i]);
+    }
+    // Reconstruir o mapa produto -> linha
+    rebuildProdutoLinhaMap();
+    atualizarTotal();
+}
+    private void limparCarrinho() {
+    cartModel.setRowCount(0);
+    produtoLinhaMap.clear();
+    atualizarTotal();
+}
+    
     // ── CONFIGURAÇÃO DA TABELA DO CARRINHO ──────────────────────────
     private void configurarTabelaCarrinho() {
-        String[] colunas = {"Produto", "Preço Unit.", "Qtd", "Subtotal"};
-        cartModel = new DefaultTableModel(colunas, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tableCart.setModel(cartModel);
-        tableCart.getColumnModel().getColumn(0).setPreferredWidth(150);
-        tableCart.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tableCart.getColumnModel().getColumn(2).setPreferredWidth(50);
-        tableCart.getColumnModel().getColumn(3).setPreferredWidth(80);
-    }
+    String[] colunas = {"Produto", "Preço Unit.", "Qtd", "Subtotal", "CodProd"};
+    cartModel = new DefaultTableModel(colunas, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+    tableCart.setModel(cartModel);
+    // Esconder a coluna do código do produto
+    tableCart.getColumnModel().getColumn(4).setMinWidth(0);
+    tableCart.getColumnModel().getColumn(4).setMaxWidth(0);
+    tableCart.getColumnModel().getColumn(4).setWidth(0);
+    // Larguras das outras colunas
+    tableCart.getColumnModel().getColumn(0).setPreferredWidth(150);
+    tableCart.getColumnModel().getColumn(1).setPreferredWidth(80);
+    tableCart.getColumnModel().getColumn(2).setPreferredWidth(50);
+    tableCart.getColumnModel().getColumn(3).setPreferredWidth(80);
+}
      // ── CARREGAR CLIENTES ───────────────────────────────────────────
-    private void carregarClientes() {
-        String sql = "SELECT cod_cliente, nome_cliente FROM cliente ORDER BY nome_cliente";
-        try (Connection conn = ligaDB.getConnect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int id = rs.getInt("cod_cliente");
-                String nome = rs.getString("nome_cliente");
-                comboClientes.addItem(nome);
-                clienteIds.add(id);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar clientes: " + e.getMessage());
+        private void carregarClientes() {
+        List<String> nomes = crud.carregarNomesClientes();
+        clienteIds = crud.carregarIdsClientes();
+        for (String nome : nomes) {
+            comboClientes.addItem(nome);
         }
     }
       // ── CARREGAR PRODUTOS (COM IMAGENS) ─────────────────────────────
-    private void carregarProdutos() {
-        String sql = "SELECT codProduto, nome, preco, imagem FROM produto";
-        try (Connection conn = ligaDB.getConnect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                int codigo = rs.getInt("codProduto");
-                String nome = rs.getString("nome");
-                double preco = rs.getDouble("preco");
-                String imagem = rs.getString("imagem");
+        private void carregarProdutos() {
+    List<LojaCRUD.Produto> produtos = crud.carregarProdutos();
+    for (LojaCRUD.Produto p : produtos) {
+        ImageIcon icon = carregarImagem(p.imagem);
+        JPanel card = criarPainelProduto(p.codigo, p.nome, p.preco, icon);
+        productGridPanel.add(card);
+    }
+    productGridPanel.revalidate();
+    productGridPanel.repaint();
+}
+        private JPanel criarPainelProduto(int codigo, String nome, double preco, ImageIcon icon) {
+    JButton btnAdd = new JButton("Adicionar");
+    Style.estilizarBotao(btnAdd);
+    btnAdd.addActionListener(e -> adicionarAoCarrinho(codigo, nome, preco));
+    return Style.criarCardProduto(nome, String.format("%.2f €", preco), icon, btnAdd);
+}
 
-                // Carregar a imagem (ou colocar um placeholder)
-                ImageIcon icon = carregarImagem(imagem);
-
-                // Painel do produto
-                JPanel card = new JPanel();
-                card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-                card.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-                JLabel lblImagem = new JLabel(icon);
-                lblImagem.setAlignmentX(CENTER_ALIGNMENT);
-
-                JLabel lblNome = new JLabel(nome);
-                lblNome.setAlignmentX(CENTER_ALIGNMENT);
-
-                JLabel lblPreco = new JLabel(String.format("%.2f €", preco));
-                lblPreco.setAlignmentX(CENTER_ALIGNMENT);
-
-                JButton btnAdd = new JButton("Adicionar");
-                btnAdd.setAlignmentX(CENTER_ALIGNMENT);
-                btnAdd.addActionListener(e -> adicionarAoCarrinho(codigo, nome, preco));
-
-                card.add(lblImagem);
-                card.add(lblNome);
-                card.add(lblPreco);
-                card.add(btnAdd);
-
-                productGridPanel.add(card);
-            }
-            productGridPanel.revalidate();
-            productGridPanel.repaint();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao carregar produtos: " + e.getMessage());
+        private void emitirVenda() {
+        if (comboClientes.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um cliente.");
+            return;
         }
+        if (cartModel.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "O carrinho está vazio.");
+            return;
+        }
+        int idCliente = clienteIds.get(comboClientes.getSelectedIndex());
+        try {
+            ultimoCodVenda = crud.inserirVenda(idCliente, totalCart, produtoLinhaMap, cartModel);
+            JOptionPane.showMessageDialog(this, "Venda realizada com sucesso! (Código: " + ultimoCodVenda + ")");
+            limparCarrinho();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao emitir venda: " + e.getMessage());
+        }
+    }
+
+    private void emitirFatura() {
+        if (ultimoCodVenda == 0) {
+            JOptionPane.showMessageDialog(this, "Nenhuma venda realizada nesta sessão.");
+            return;
+        }
+        crud.gerarFatura(ultimoCodVenda);
     }
 
     // Método auxiliar para carregar imagem a partir do caminho guardado na BD
@@ -180,13 +228,21 @@ public class Loja extends javax.swing.JFrame {
             cartModel.setValueAt(String.format("%.2f", subtotal), linha, 3);
         } else {
             // Novo produto → adicionar linha
-            Object[] row = {nome, String.format("%.2f", preco), 1, String.format("%.2f", preco)};
+            Object[] row = {nome, String.format("%.2f", preco), 1, String.format("%.2f", preco), codProduto};
             cartModel.addRow(row);
             int linha = cartModel.getRowCount() - 1;
             produtoLinhaMap.put(codProduto, linha);
         }
         atualizarTotal();
     }
+    
+    private void rebuildProdutoLinhaMap() {
+    produtoLinhaMap.clear();
+    for (int i = 0; i < cartModel.getRowCount(); i++) {
+        int cod = (int) cartModel.getValueAt(i, 4); // coluna do código
+        produtoLinhaMap.put(cod, i);
+    }
+}
     // ── ATUALIZAR TOTAL DO CARRINHO ─────────────────────────────────
     private void atualizarTotal() {
         totalCart = 0.0;
@@ -197,71 +253,6 @@ public class Loja extends javax.swing.JFrame {
         lblTotal.setText(String.format("%.2f €", totalCart));
     }
     // ── EMITIR VENDA ────────────────────────────────────────────────
-    private void emitirVenda() {
-        if (comboClientes.getSelectedIndex() == -1) {
-            JOptionPane.showMessageDialog(this, "Selecione um cliente.");
-            return;
-        }
-        if (cartModel.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "O carrinho está vazio.");
-            return;
-        }
-        int idCliente = clienteIds.get(comboClientes.getSelectedIndex());
-        String sqlVenda = "INSERT INTO venda (codCliente, dataVenda, total) VALUES (?, NOW(), ?)";
-        String sqlItem = "INSERT INTO item_venda (codVenda, codProduto, quantidade, precoUnitario, subtotal) VALUES (?, ?, ?, ?, ?)";
-
-        try (Connection conn = ligaDB.getConnect()) {
-            conn.setAutoCommit(false);
-            int codVenda;
-            // Inserir venda
-            try (PreparedStatement psVenda = conn.prepareStatement(sqlVenda, Statement.RETURN_GENERATED_KEYS)) {
-                psVenda.setInt(1, idCliente);
-                psVenda.setBigDecimal(2, BigDecimal.valueOf(totalCart));
-                psVenda.executeUpdate();
-                ResultSet rs = psVenda.getGeneratedKeys();
-                if (rs.next()) {
-                    codVenda = rs.getInt(1);
-                } else {
-                    throw new Exception("Falha ao obter o código da venda.");
-                }
-            }
-            // Inserir itens (precisa do map codProduto -> preco, etc.)
-            // Vamos buscar novamente os preços da BD ou usar os dados do carrinho
-            // Criamos um statement preparado para os itens
-            try (PreparedStatement psItem = conn.prepareStatement(sqlItem)) {
-                // Recuperar os códigos dos produtos a partir do map
-                for (Map.Entry<Integer, Integer> entry : produtoLinhaMap.entrySet()) {
-                    int codProduto = entry.getKey();
-                    int linha = entry.getValue();
-                    int qtd = (int) cartModel.getValueAt(linha, 2);
-                    double precoUnit = Double.parseDouble(((String) cartModel.getValueAt(linha, 1)).replace(",", "."));
-                    double subtotal = qtd * precoUnit;
-                    psItem.setInt(1, codVenda);
-                    psItem.setInt(2, codProduto);
-                    psItem.setInt(3, qtd);
-                    psItem.setBigDecimal(4, BigDecimal.valueOf(precoUnit));
-                    psItem.setBigDecimal(5, BigDecimal.valueOf(subtotal));
-                    psItem.executeUpdate();
-                }
-            }
-            conn.commit();
-            ultimoCodVenda = codVenda; 
-            JOptionPane.showMessageDialog(this, "Venda realizada com sucesso! (Código: " + codVenda + ")");
-            // Limpar carrinho
-            cartModel.setRowCount(0);
-            produtoLinhaMap.clear();
-            atualizarTotal();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Erro ao emitir venda: " + e.getMessage());
-        }
-    }
-    private void emitirFatura() {
-    if (ultimoCodVenda == 0) {
-        JOptionPane.showMessageDialog(this, "Nenhuma venda realizada nesta sessão.");
-        return;
-    }
-    gerarFatura(ultimoCodVenda);
-}
     private void gerarFatura(int codVenda) {
     String numeroFatura = "";
     String nomePdf = "";
@@ -418,6 +409,7 @@ public class Loja extends javax.swing.JFrame {
 
     // ── MÉTODO MAIN (opcional, para testes) ─────────────────────────
     public static void main(String args[]) {
+        
         java.awt.EventQueue.invokeLater(() -> new Loja().setVisible(true));
     }
     /**
@@ -440,9 +432,11 @@ public class Loja extends javax.swing.JFrame {
         lblTotal = new javax.swing.JLabel();
         btnEmitirVenda = new javax.swing.JButton();
         btnEmitirFatura = new javax.swing.JButton();
+        btnLimparCarrinho = new javax.swing.JButton();
+        btnRemoverItem = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         productGridPanel = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        footer = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -493,6 +487,12 @@ public class Loja extends javax.swing.JFrame {
         btnEmitirFatura.addActionListener(this::btnEmitirFaturaActionPerformed);
         bottomPanel.add(btnEmitirFatura);
 
+        btnLimparCarrinho.setText("Limpar carrinho");
+        bottomPanel.add(btnLimparCarrinho);
+
+        btnRemoverItem.setText("Remover selecionado");
+        bottomPanel.add(btnRemoverItem);
+
         cartPanel.add(bottomPanel, java.awt.BorderLayout.SOUTH);
 
         getContentPane().add(cartPanel, java.awt.BorderLayout.WEST);
@@ -503,13 +503,14 @@ public class Loja extends javax.swing.JFrame {
         getContentPane().add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         jButton1.setText("Sair");
-        jPanel1.add(jButton1);
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        footer.add(jButton1);
 
         jButton2.setText("Voltar");
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel1.add(jButton2);
+        footer.add(jButton2);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(footer, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -527,6 +528,10 @@ public class Loja extends javax.swing.JFrame {
      new PRP.Pagina_Principal().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       System.exit(0);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -536,13 +541,15 @@ public class Loja extends javax.swing.JFrame {
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton btnEmitirFatura;
     private javax.swing.JButton btnEmitirVenda;
+    private javax.swing.JButton btnLimparCarrinho;
+    private javax.swing.JButton btnRemoverItem;
     private javax.swing.JPanel cartPanel;
     private javax.swing.JLabel cliente;
     private javax.swing.JComboBox<String> comboClientes;
+    private javax.swing.JPanel footer;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblTotal;
