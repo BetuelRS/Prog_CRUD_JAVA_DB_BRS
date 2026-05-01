@@ -143,12 +143,12 @@ public class Loja extends javax.swing.JFrame {
 }
      // ── CARREGAR CLIENTES ───────────────────────────────────────────
         private void carregarClientes() {
-        List<String> nomes = crud.carregarNomesClientes();
-        clienteIds = crud.carregarIdsClientes();
-        for (String nome : nomes) {
-            comboClientes.addItem(nome);
-        }
+    List<String> nifNome = crud.carregarNifNomeClientes();
+    clienteIds = crud.carregarIdsClientes(); // IDs continuam na mesma ordem
+    for (String texto : nifNome) {
+        comboClientes.addItem(texto);
     }
+}
       // ── CARREGAR PRODUTOS (COM IMAGENS) ─────────────────────────────
         private void carregarProdutos() {
     List<LojaCRUD.Produto> produtos = crud.carregarProdutos();

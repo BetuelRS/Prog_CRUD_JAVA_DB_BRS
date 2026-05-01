@@ -81,11 +81,11 @@ public class FaturaPDF {
                 ps.setString(4, "temp.pdf");
                 ps.executeUpdate();
             }
-
+            String dataFormatada = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             // 4. Diretório e nome ficheiro
             Path faturasDir = Paths.get("faturas");
             if (!Files.exists(faturasDir)) Files.createDirectory(faturasDir);
-            nomePdf = "faturas/" + numeroFatura.replace("/", "_") + ".pdf";
+            nomePdf = "faturas/FAT_" + codVenda + "_" + dataFormatada + ".pdf";
 
             // 5. Atualizar nomePdf
             try (PreparedStatement ps = conn.prepareStatement("UPDATE fatura SET nomePdf = ? WHERE numeroFatura = ?")) {
@@ -100,17 +100,42 @@ public class FaturaPDF {
             document = new Document(PageSize.A4, 50, 50, 50, 50);
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(nomePdf));
             document.open();
+            
+                        // Cabeçalho em duas colunas: info empresa + logotipo grande
+            PdfPTable headerTable = new PdfPTable(2);
+            headerTable.setWidthPercentage(100);
+            headerTable.setWidths(new float[]{65, 35}); // largura das colunas
+            headerTable.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+            headerTable.setSpacingAfter(10);
 
-            // Cabeçalho da empresa
-            Paragraph header = new Paragraph();
-            header.setAlignment(Element.ALIGN_CENTER);
-            header.add(new Chunk("TECHCOMPONENTES, LDA\n", 
+            // Coluna esquerda – informações da empresa
+            Paragraph infoEmpresa = new Paragraph();
+            infoEmpresa.add(new Chunk("TECHCOMPONENTES, LDA\n",
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 22, COR_EMPRESA)));
-            header.add(new Chunk("Rua das Tecnologias, 123 – 4000-123 Porto\n"
+            infoEmpresa.add(new Chunk("Rua das Tecnologias, 123 – 4000-123 Porto\n"
                     + "NIF: 500 123 456 | Tel: 222 333 444\n"
-                    + "email: geral@techcomponentes.pt\n\n",
+                    + "email: geral@techcomponentes.pt",
                     FontFactory.getFont(FontFactory.HELVETICA, 10, BaseColor.GRAY)));
-            document.add(header);
+            PdfPCell cellInfo = new PdfPCell(infoEmpresa);
+            cellInfo.setBorder(Rectangle.NO_BORDER);
+            cellInfo.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cellInfo.setPaddingLeft(5);
+            headerTable.addCell(cellInfo);
+
+            // Coluna direita – logotipo bem maior
+            PdfPCell cellLogo = new PdfPCell();
+            cellLogo.setBorder(Rectangle.NO_BORDER);
+            cellLogo.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellLogo.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            try {
+                Image logo = Image.getInstance(getClass().getResource("/imagens/logo.png"));
+                logo.scaleToFit(160, 90);  // imagem maior que antes
+                cellLogo.addElement(logo);
+            } catch (Exception e) {
+                // se não houver logotipo, a célula direita fica vazia
+            }
+            headerTable.addCell(cellLogo);
+            document.add(headerTable);
 
             // Linha separadora
             LineSeparator linha = new LineSeparator(1.5f, 100, COR_EMPRESA, Element.ALIGN_CENTER, 0);

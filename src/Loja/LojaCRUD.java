@@ -80,6 +80,22 @@ public class LojaCRUD {
         return lista;
     }
     
+    public List<String> carregarNifNomeClientes() {
+    List<String> lista = new ArrayList<>();
+    String sql = "SELECT nif, nome_cliente FROM cliente ORDER BY nome_cliente";
+    try (Connection conn = ligaDB.getConnect();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        while (rs.next()) {
+            int nif = rs.getInt("nif");
+            String nome = rs.getString("nome_cliente");
+            lista.add(nif + " - " + nome);
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException("Erro ao carregar clientes: " + e.getMessage());
+    }
+    return lista;
+}
 
     // Classe interna para representar um produto
     public static class Produto {
